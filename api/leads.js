@@ -1,30 +1,48 @@
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
 
 export default async function handler(req, res) {
-  // Allow only POST requests
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+  // Set CORS headers (important)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
   }
 
-  try {
-    const data = req.body;
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Only POST allowed" });
+  }
 
-    // Basic validation
+  if (!uri) {
+    return res.status(500).json({ message: "MONGODB_URI is missing" });
+  }
+
+  const client = new MongoClient(uri);
+
+  try {
+    const data = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+
     if (!data.name || !data.phone) {
       return res.status(400).json({ message: "Name and phone are required" });
     }
 
     await client.connect();
-    const db = client.db("biwako"); // database name
-    const collection = db.collection("leads"); // collection name
+    const db = client.db("biwako");
+    const collection = db.collection("leads");
 
     const lead = {
-      ...data,
-      createdAt: new Date(),
+      name: data.name,
+      phone: data.phone,
+      email: data.email || "",
+      interest: data.interest || "",
+      goal: data.goal || "",
+      date: data.date || "",
+      message: data.message || "",
       source: data.source || "website",
+      createdAt: new Date(),
     };
 
     const result = await collection.insertOne(lead);
@@ -38,7 +56,9 @@ export default async function handler(req, res) {
     console.error("MongoDB Error:", error);
     return res.status(500).json({
       success: false,
-      message: "Failed to save lead",
+      message: error.message || "Failed to save lead",
     });
+  } finally {
+    await client.close();
   }
 }
