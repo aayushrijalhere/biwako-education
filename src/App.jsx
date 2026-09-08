@@ -236,8 +236,8 @@ function Hero() {
         alert(result.message || "Something went wrong. Please try again.");
       }
     } catch (err) {
-      console.error("Form submission error:", err);
-      alert("Failed to submit. Please check your connection and try again.");
+      console.error(err);
+      alert("Failed to submit. Please try again.");
     }
   };
 
@@ -614,8 +614,8 @@ function Booking() {
         alert(result.message || "Something went wrong. Please try again.");
       }
     } catch (err) {
-      console.error("Form submission error:", err);
-      alert("Failed to submit. Please check your connection and try again.");
+      console.error(err);
+      alert("Failed to submit. Please try again.");
     }
   };
 
