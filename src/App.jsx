@@ -240,7 +240,6 @@ function Hero() {
       alert("Failed to submit. Please try again.");
     }
   };
-
   return (
     <section className="hero">
       <div className="container hero-grid">
@@ -589,11 +588,8 @@ function Booking() {
         body: JSON.stringify({
           name: formData.name,
           phone: formData.phone,
-          email: formData.email,
-          date: formData.date,
-          goal: formData.goal,
-          message: formData.message,
-          source: "booking-form",
+          interest: formData.interest,
+          source: "hero-form",
         }),
       });
 
@@ -601,14 +597,7 @@ function Booking() {
 
       if (response.ok) {
         setSubmitted(true);
-        setFormData({
-          name: "",
-          phone: "",
-          email: "",
-          date: "",
-          goal: "Japanese Language School",
-          message: "",
-        });
+        setFormData({ name: "", phone: "", interest: "" });
         setTimeout(() => setSubmitted(false), 4000);
       } else {
         alert(result.message || "Something went wrong. Please try again.");
