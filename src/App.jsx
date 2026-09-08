@@ -588,8 +588,11 @@ function Booking() {
         body: JSON.stringify({
           name: formData.name,
           phone: formData.phone,
-          interest: formData.interest,
-          source: "hero-form",
+          email: formData.email,
+          date: formData.date,
+          goal: formData.goal,
+          message: formData.message,
+          source: "booking-form",
         }),
       });
 
@@ -597,7 +600,14 @@ function Booking() {
 
       if (response.ok) {
         setSubmitted(true);
-        setFormData({ name: "", phone: "", interest: "" });
+        setFormData({
+          name: "",
+          phone: "",
+          email: "",
+          date: "",
+          goal: "Japanese Language School",
+          message: "",
+        });
         setTimeout(() => setSubmitted(false), 4000);
       } else {
         alert(result.message || "Something went wrong. Please try again.");
