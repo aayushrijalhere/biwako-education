@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Navbar from "./components/Navbar";
 
 // ========== DATA ==========
 const services = [
@@ -158,7 +159,7 @@ function Header() {
     <header className={scrolled ? "scrolled" : ""}>
       <div className="container nav">
         <a href="#" className="logo">
-          Biwako <span>International</span> <span>Group</span>
+          Biwako <span>International</span>
         </a>
 
         <ul className="nav-links">
@@ -189,7 +190,7 @@ function Header() {
             WhatsApp
           </a>
           <a href="#booking" className="btn btn-primary">
-            Book Free Call
+            Free Call
           </a>
         </div>
 
@@ -869,7 +870,7 @@ function Footer() {
                 <a href="mailto:biwakogroup@gmail.com">biwakogroup@gmail.com</a>
               </li>
               <li>Bagbazar, Kathmandu</li>
-              <li>Biratnagar, Nepal</li>
+              <li>Itahari, Nepal</li>
             </ul>
           </div>
         </div>
@@ -909,7 +910,7 @@ function FloatingCTA() {
 export default function App() {
   return (
     <>
-      <Header />
+      <Navbar />
       <Hero />
       <Services />
       <Process />

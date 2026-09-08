@@ -28,7 +28,8 @@ body {
 h1,
 h2,
 h3,
-.logo {
+.logo,
+.nav-logo {
   font-family: "Playfair Display", serif;
 }
 
@@ -38,31 +39,44 @@ h3,
   padding: 0 24px;
 }
 
-/* ========== HEADER ========== */
-header {
+/* ========== HEADER & NAVBAR ========== */
+header,
+.navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
+  width: 100%;
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(12px);
   z-index: 1000;
   border-bottom: 1px solid rgba(10, 37, 64, 0.06);
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.3s ease-in-out,
+    box-shadow 0.3s ease;
 }
 
-header.scrolled {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+/* Scroll Hide / Show Animation */
+.navbar-visible {
+  transform: translateY(0);
 }
 
-.nav {
+.navbar-hidden {
+  transform: translateY(-100%);
+}
+
+.nav,
+.nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 72px;
+  padding: 0 24px;
 }
 
-.logo {
+.logo,
+.nav-logo {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--primary);
@@ -70,13 +84,15 @@ header.scrolled {
   letter-spacing: -0.5px;
 }
 
-.logo span {
+.logo span,
+.nav-logo span {
   color: var(--accent);
 }
 
 .nav-links {
   display: flex;
   gap: 32px;
+  align-items: center;
   list-style: none;
 }
 
@@ -92,15 +108,18 @@ header.scrolled {
   color: var(--accent);
 }
 
-.nav-cta {
+.nav-cta,
+.nav-actions {
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
+/* BUTTONS */
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 12px 24px;
   border-radius: 50px;
@@ -155,13 +174,38 @@ header.scrolled {
   transform: translateY(-2px);
 }
 
+.btn-whatsapp-sm {
+  background: #25d366;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-book-sm {
+  background: var(--primary);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .mobile-toggle {
   display: none;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   cursor: pointer;
   color: var(--primary);
+  padding: 4px;
+}
+
+.mobile-only-btn {
+  display: none;
 }
 
 /* ========== HERO ========== */
@@ -840,12 +884,9 @@ footer a:hover {
   color: white;
 }
 
-/* ========== RESPONSIVE ========== */
 /* ==========================================
-   MOBILE & TABLET RESPONSIVE STYLES
+   TABLET RESPONSIVE STYLES (Under 992px)
    ========================================== */
-
-/* Tablet & Mobile Screens (Under 992px) */
 @media (max-width: 992px) {
   .hero-grid,
   .booking-grid,
@@ -854,27 +895,62 @@ footer a:hover {
     gap: 32px !important;
   }
 
-  .nav-links {
-    display: none; /* Hide standard nav links on mobile */
-  }
-
-  .mobile-toggle {
-    display: block !important; /* Show mobile menu icon */
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
   }
 
   .hero-stats {
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 20px;
   }
 }
 
-/* Phone Screens (Under 600px) */
-@media (max-width: 600px) {
-  .container {
+/* ==========================================
+   MOBILE RESPONSIVE & NAVBAR DRAWER (< 768px)
+   ========================================== */
+@media (max-width: 768px) {
+  .container,
+  .nav-container {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
 
+  .mobile-toggle {
+    display: block !important;
+  }
+
+  .btn-whatsapp-sm,
+  .btn-book-sm {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+
+  /* Slide-down mobile drawer menu */
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    flex-direction: column;
+    padding: 24px 20px;
+    gap: 18px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: none;
+    border-top: 1px solid rgba(10, 37, 64, 0.06);
+  }
+
+  .nav-links.nav-active {
+    display: flex !important;
+  }
+
+  .mobile-only-btn {
+    display: inline-flex !important;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Typography & Layout Scaffolding for Mobile */
   h1 {
     font-size: 2.1rem !important;
     line-height: 1.25 !important;
@@ -884,6 +960,10 @@ footer a:hover {
     font-size: 1.75rem !important;
   }
 
+  .hero {
+    padding: 110px 0 60px;
+  }
+
   .hero-ctas {
     flex-direction: column;
     width: 100%;
@@ -891,7 +971,6 @@ footer a:hover {
 
   .hero-ctas .btn {
     width: 100%;
-    text-align: center;
   }
 
   .services-grid,
