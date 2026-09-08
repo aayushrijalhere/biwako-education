@@ -208,12 +208,37 @@ function Hero() {
     interest: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(
-      "Thank you! Our counsellor will contact you shortly via WhatsApp/phone.",
-    );
-    setFormData({ name: "", phone: "", interest: "" });
+    e.stopPropagation();
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          interest: formData.interest,
+          source: "hero-form",
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({ name: "", phone: "", interest: "" });
+        setTimeout(() => setSubmitted(false), 4000);
+      } else {
+        alert(result.message || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.error("Form submission error:", err);
+      alert("Failed to submit. Please check your connection and try again.");
+    }
   };
 
   return (
@@ -551,19 +576,47 @@ function Booking() {
     message: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(
-      "Appointment request received! We will confirm your slot within 24 hours.",
-    );
-    setFormData({
-      name: "",
-      phone: "",
-      email: "",
-      date: "",
-      goal: "Japanese Language School",
-      message: "",
-    });
+    e.stopPropagation();
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          date: formData.date,
+          goal: formData.goal,
+          message: formData.message,
+          source: "booking-form",
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({
+          name: "",
+          phone: "",
+          email: "",
+          date: "",
+          goal: "Japanese Language School",
+          message: "",
+        });
+        setTimeout(() => setSubmitted(false), 4000);
+      } else {
+        alert(result.message || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.error("Form submission error:", err);
+      alert("Failed to submit. Please check your connection and try again.");
+    }
   };
 
   return (
