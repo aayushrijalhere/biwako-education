@@ -202,13 +202,14 @@ function Header() {
 }
 
 function Hero() {
+  const [submitted, setSubmitted] = useState(false); // ADDED
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     interest: "",
   });
 
-  const handleSubmit = async (e) => {
+  const handleHeroSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -240,6 +241,7 @@ function Hero() {
       alert("Failed to submit. Please try again.");
     }
   };
+
   return (
     <section className="hero">
       <div className="container hero-grid">
@@ -292,24 +294,23 @@ function Hero() {
           <p>
             Fill this form and our counsellor will contact you within 24 hours.
           </p>
+
           {submitted && (
             <div
               style={{
                 backgroundColor: "#d4edda",
                 color: "#155724",
-                padding: "10px 14px",
+                padding: "10px",
                 borderRadius: "6px",
                 marginBottom: "12px",
-                border: "1px solid #c3e6cb",
                 textAlign: "center",
-                fontSize: "0.9rem",
-                fontWeight: 500,
               }}
             >
-              ✅ Submitted successfully! We will get back to you shortly.
+              ✅ Request submitted! We will contact you soon.
             </div>
           )}
-          <form onSubmit={handleSubmit}>
+
+          <form onSubmit={handleHeroSubmit}>
             <div className="form-group">
               <label>Full Name</label>
               <input
@@ -582,7 +583,7 @@ function FAQ() {
 }
 
 function Booking() {
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false); // ADDED
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -592,7 +593,7 @@ function Booking() {
     message: "",
   });
 
-  const handleSubmit = async (e) => {
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -701,20 +702,18 @@ function Booking() {
                 style={{
                   backgroundColor: "#d4edda",
                   color: "#155724",
-                  padding: "12px 16px",
+                  padding: "10px",
                   borderRadius: "6px",
-                  marginBottom: "16px",
-                  border: "1px solid #c3e6cb",
+                  marginBottom: "12px",
                   textAlign: "center",
-                  fontWeight: 500,
                 }}
               >
-                ✅ Consultation request submitted successfully! We will contact
-                you soon.
+                ✅ Booking request submitted successfully! We will contact you
+                soon.
               </div>
             )}
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleBookingSubmit}>
               <div className="form-group">
                 <label htmlFor="booking-name">Full Name *</label>
                 <input

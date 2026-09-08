@@ -2,8 +2,21 @@ import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
 
+// Reuse the client instance across function calls in serverless environments
+let cachedClient = null;
+
+async function connectToDatabase() {
+  if (cachedClient) {
+    return cachedClient;
+  }
+  const client = new MongoClient(uri);
+  await client.connect();
+  cachedClient = client;
+  return client;
+}
+
 export default async function handler(req, res) {
-  // Set CORS headers (important)
+  // Set CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -17,48 +30,45 @@ export default async function handler(req, res) {
   }
 
   if (!uri) {
-    return res.status(500).json({ message: "MONGODB_URI is missing" });
+    return res
+      .status(500)
+      .json({ message: "MONGODB_URI environment variable is missing" });
   }
 
-  const client = new MongoClient(uri);
-
   try {
-    const data = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-
-    if (!data.name || !data.phone) {
-      return res.status(400).json({ message: "Name and phone are required" });
-    }
-
-    await client.connect();
+    const client = await connectToDatabase();
+    // Replaces default DB or targets 'biwako' database
     const db = client.db("biwako");
     const collection = db.collection("leads");
 
-    const lead = {
-      name: data.name,
-      phone: data.phone,
-      email: data.email || "",
-      interest: data.interest || "",
-      goal: data.goal || "",
-      date: data.date || "",
-      message: data.message || "",
-      source: data.source || "website",
+    // Extract all expected fields from body
+    const { name, phone, email, date, goal, message, interest, source } =
+      req.body || {};
+
+    // Map fields cleanly so both forms work properly
+    const newLead = {
+      name: name || "",
+      phone: phone || "",
+      email: email || "",
+      date: date || "",
+      goal: goal || interest || "",
+      message: message || "",
+      source: source || "unknown",
       createdAt: new Date(),
     };
 
-    const result = await collection.insertOne(lead);
+    const result = await collection.insertOne(newLead);
 
     return res.status(200).json({
       success: true,
-      message: "Lead saved successfully",
-      id: result.insertedId,
+      message: "Lead stored successfully",
+      insertedId: result.insertedId,
     });
   } catch (error) {
-    console.error("MongoDB Error:", error);
+    console.error("MongoDB Insert Error:", error);
     return res.status(500).json({
       success: false,
-      message: error.message || "Failed to save lead",
+      message: error.message || "Internal server error",
     });
-  } finally {
-    await client.close();
   }
 }
