@@ -292,7 +292,23 @@ function Hero() {
           <p>
             Fill this form and our counsellor will contact you within 24 hours.
           </p>
-
+          {submitted && (
+            <div
+              style={{
+                backgroundColor: "#d4edda",
+                color: "#155724",
+                padding: "10px 14px",
+                borderRadius: "6px",
+                marginBottom: "12px",
+                border: "1px solid #c3e6cb",
+                textAlign: "center",
+                fontSize: "0.9rem",
+                fontWeight: 500,
+              }}
+            >
+              ✅ Submitted successfully! We will get back to you shortly.
+            </div>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Full Name</label>
@@ -566,6 +582,7 @@ function FAQ() {
 }
 
 function Booking() {
+  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -608,7 +625,7 @@ function Booking() {
           goal: "Japanese Language School",
           message: "",
         });
-        setTimeout(() => setSubmitted(false), 4000);
+        setTimeout(() => setSubmitted(false), 5000);
       } else {
         alert(result.message || "Something went wrong. Please try again.");
       }
@@ -678,6 +695,25 @@ function Booking() {
 
           <div className="booking-form-card">
             <h3>Book Your Free Appointment</h3>
+
+            {submitted && (
+              <div
+                style={{
+                  backgroundColor: "#d4edda",
+                  color: "#155724",
+                  padding: "12px 16px",
+                  borderRadius: "6px",
+                  marginBottom: "16px",
+                  border: "1px solid #c3e6cb",
+                  textAlign: "center",
+                  fontWeight: 500,
+                }}
+              >
+                ✅ Consultation request submitted successfully! We will contact
+                you soon.
+              </div>
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="booking-name">Full Name *</label>
